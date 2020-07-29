@@ -1,0 +1,38 @@
+{
+  "name": "4all",
+  "version": "1.0.0",
+  "description": "4all challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel-node index.js",
+    "dev": "nodemon -e js,json,yaml --exec npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabrielsp92/4all-locadora.git"
+  },
+  "keywords": [
+    "4all",
+    "locadora"
+  ],
+  "author": "Gabriel Soares Pereira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gabrielsp92/4all-locadora/issues"
+  },
+  "homepage": "https://github.com/gabrielsp92/4all-locadora#readme",
+  "dependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/node": "^7.10.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.10.4",
+    "@babel/plugin-proposal-optional-catch-binding": "^7.10.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "babel-node": "0.0.1-security",
+    "bcrypt": "^5.0.0",
+    "nodemon": "^2.0.4",
+    "sequelize": "^6.3.3",
+    "sequelize-cli": "^6.2.0"
+  }
+}
