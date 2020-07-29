@@ -30,6 +30,7 @@ src - contains all source code
 tests - contains all tests code
 services - contains all service codes
 controller - contains controllers of every route
+middlewares - contains all middlewares codes
 routes - contains all declared express routes
 
 # Run Project
