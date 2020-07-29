@@ -4,5 +4,5 @@ import { jwtSecret } from '../config/vars'
 export default jwt({
   secret: jwtSecret,
   credentialsRequired: false,
-  algorithms: ['RS256'],
+  algorithms: ['HS256'],
 })

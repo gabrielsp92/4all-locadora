@@ -1,4 +1,5 @@
 'use strict';
+import RequestError from '../helpers/RequestError'
 const bcrypt = require('bcrypt')
 const {
   Model
@@ -24,12 +25,11 @@ module.exports = (sequelize, DataTypes) => {
     }
     static async authenticateByEmailAndPassword(email, password) {
       const user = await this.findOne({email})
-      if (!user) throw new  Error('User not found')
+      if (!user) throw new RequestError(400, 'User not found')
       if (await this.validatePassword(password, user.password)){
-        console.log('User Authenticated')
         return user
       }
-      throw new Error('Wrong Password')
+      throw new RequestError(400, 'Wrong Password')
     }
     static async validatePassword(password, hash) {
       console.log({ password, hash })
