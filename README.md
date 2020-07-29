@@ -48,6 +48,6 @@ $ npx sequelize-cli db:seed:all
 - seeders - contains all seed files
 - tests - contains all tests code
 - services - contains all services codes
-- controller - contains all controllers codes
+- controllers - contains all controllers codes
 - middlewares - contains all middlewares codes
 - routes - contains all declared express routes
