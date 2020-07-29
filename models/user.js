@@ -24,15 +24,14 @@ module.exports = (sequelize, DataTypes) => {
       return bcrypt.hash(password, bcrypt.genSaltSync(8));
     }
     static async authenticateByEmailAndPassword(email, password) {
-      const user = await this.findOne({email})
-      if (!user) throw new RequestError(400, 'User not found')
+      const user = await this.findOne({ where: { email } })
+      if (!user) throw new RequestError(400, 'Usuário não encontrado')
       if (await this.validatePassword(password, user.password)){
         return user
       }
-      throw new RequestError(400, 'Wrong Password')
+      throw new RequestError(401, 'Senha inválida')
     }
     static async validatePassword(password, hash) {
-      console.log({ password, hash })
       return bcrypt.compare(password, hash);
     }
   };

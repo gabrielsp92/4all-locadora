@@ -3,7 +3,7 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import cors from 'cors'
 import Routes from '../routes'
-import jwt from '../middlewares/jwt'
+// import jwt from '../middlewares/jwt'
 import bodyParser from 'body-parser'
 import * as env from './vars'
 
@@ -26,7 +26,7 @@ export const buildApp = () => {
   app.use(bodyParser.json())
 
   app.use(cors())
-  app.use(jwt)
+  // app.use(jwt)
   app.use(Routes)
   console.info(`📦 Loaded module: express`)
   return app

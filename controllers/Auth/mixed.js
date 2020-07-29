@@ -16,5 +16,9 @@ export default {
   async refresh (req, res) {
     const result = await AuthService.refreshToken(req.user)
     res.send(result)
-  }
+  },
+  async register (req, res) {
+    const result = await AuthService.register(req.body)
+    res.send(result)
+  },
 }
