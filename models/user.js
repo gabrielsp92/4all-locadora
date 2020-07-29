@@ -22,18 +22,18 @@ module.exports = (sequelize, DataTypes) => {
     static generateHash(password) {
       return bcrypt.hash(password, bcrypt.genSaltSync(8));
     }
-    static validPassword(password) {
-      return bcrypt.compare(password, this.password);
+    static async authenticateByEmailAndPassword(email, password) {
+      const user = await this.findOne({email})
+      if (!user) throw new  Error('User not found')
+      if (await this.validatePassword(password, user.password)){
+        console.log('User Authenticated')
+        return user
+      }
+      throw new Error('Wrong Password')
     }
-    static beforeCreate(user, options) {
-      console.log('Pre Save Hook')
-      return bcrypt.hash(user.password, 10)
-        .then(hash => {
-          user.password = hash
-        })
-        .catch (err => {
-          throw new Error()
-        })
+    static async validatePassword(password, hash) {
+      console.log({ password, hash })
+      return bcrypt.compare(password, hash);
     }
   };
   User.init({
@@ -44,6 +44,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
+    hooks: {
+      beforeCreate: async (user, options) => {
+        user.password = await bcrypt.hash(user.password, bcrypt.genSaltSync(8));
+      }
+    }
   });
   return User;
 };

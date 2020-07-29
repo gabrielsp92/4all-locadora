@@ -3,5 +3,3 @@ dist/
 .dist/
 .docker/
 .env
-.history/
-tmp/
