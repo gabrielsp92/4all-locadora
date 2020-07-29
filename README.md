@@ -1,53 +1,54 @@
 
+# 4all-locadora
+> Api REST for 4all-locadora app
 
-#API DOCS
+## Build Setup
 
-# Modules
+``` bash
+# install dependencies
+$ npm install
 
-[Node.js] (https://nodejs.org/api/) - Interpretador de código JS
-[Babel.js] (https://babeljs.io) -  transcompilador JavaScrip
-[Express.js](http://expressjs.com/pt-br/api.html) - REST api webservice 
-[Sequelize] (https://sequelize.org/) - ORM para banco de dados relacional
-[JWT](https://jwt.io/) - Criação e tratamento de web tokens para autenticação
-[Bcrypt](https://www.npmjs.com/package/bcrypt) - Criptografia de senhas
-[Swagger.io](https://swagger.io/docs/specification/about/) - Especificação de documentação
+#compose container with postgres
+$ docker-compose up -d
 
-# Tools
-[Docker] - Container 
+# serve with hot reload at localhost:4000
+$ npm run dev
 
-# Scripts
+# launch server
+$ npm start
 
-npm run dev - Start project in dev mode with nodemon and babel
-npm run start - Start project with babel
+# test application
+$ npm run test
 
-#Project bootstrapping
+# migrate database
+$ npx sequelize-cli db:migrate
 
-config - contains config file, which tells CLI how to connect with database
-models - contains all models for your project
-migrations - contains all migration files
-seeders - contains all seed files
-src - contains all source code
-tests - contains all tests code
-services - contains all service codes
-controller - contains controllers of every route
-middlewares - contains all middlewares codes
-routes - contains all declared express routes
+# seed database
+$ npx sequelize-cli db:seed:all
+```
 
-# Run Project
+## What was used here
+- [Node.js] (https://nodejs.org/api/) - JavaScript runtime
+- [Babel.js] (https://babeljs.io) -  JavaScript compiler
+- [Express.js](http://expressjs.com/pt-br/api.html) - REST api webservice 
+- [Sequelize] (https://sequelize.org/) - ORM for relational database
+- [JWT](https://jwt.io/) - Web tokens for authentications
+- [Bcrypt](https://www.npmjs.com/package/bcrypt) - Encrypting passwords
+- [Swagger.io](https://swagger.io/docs/specification/about/) - Api Docs
+- [Mocha](https://mochajs.org) Asynchronous testing
+- [Chai](https://www.chaijs.com/) Assertion Framework
+- [Docker] - Container with postgres and pgadmin4
 
-Instale os Modulos
- $ npm install
 
-Suba o Container do Docker com a imagem do postgress e pgadmin:
- $ docker-compose up -d
+##Project bootstrapping
 
-Migre o banco de dados
- $npx sequelize-cli db:migrate
-
-Popule o banco de dados:
-  $npx sequelize-cli db:seed:all
-
-Inicie a aplicacao
- $ npm run test // test
- $ npm run dev // dev
- $ npm run start // prod
+- config - contains config file, which tells CLI how to connect with database
+- models - contains all models for your project
+- migrations - contains all migration files
+- seeders - contains all seed files
+- src - contains all source code
+- tests - contains all tests code
+- services - contains all service codes
+- controller - contains controllers of every route
+- middlewares - contains all middlewares codes
+- routes - contains all declared express routes
