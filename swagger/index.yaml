@@ -1,0 +1,202 @@
+openapi: 3.0.0
+info:
+  title: 4All Locadora
+  description: Essa é a documentação do projeto Desafio Locadora para a 4all
+  version: 1.0
+  contact:
+    name: Gabriel Soares Pereira
+    email: gsoaresp92@gmail.com
+    url: https://github.com/gabrielsp92
+host: localhost:4000
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+
+## COMPONENTS
+components:
+  ## AUTH
+  securitySchemes:
+    admin:
+      type: apiKey
+      name: Authorization
+      in: header
+    client:
+      type: apiKey
+      name: Authorization
+      in: header
+  responses:
+    UnauthorizedError:
+      description: Usuário nao autorizado
+  ## SCHEMAS
+  schemas:
+    Register:
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+      reuired:
+        - email
+        - password
+        - name
+    Login:
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+    Token:
+      properties:
+        token:
+          type: string
+        
+    User:
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        id:
+          type: integer
+    Movie:
+      properties:
+        director:
+          type: string
+        title:
+          type: string
+        quantity:
+          type: integer
+        id:
+          type: integer
+tags:
+  - name: Autenticação
+    description: Rotas utilizadas para autenticação na plataforma
+  - name: Sistema
+    description: informações e disponibilidade do sistema
+  - name: Usuários
+    description: Gestão de Usuários
+  - name: Locações
+    description: Gestão de Locações
+  - name: Filmes
+    description: Gestão de Filmes
+
+## PATHS
+paths:
+  /healthcheck:
+    get:
+      tags:
+        - Sistema
+      summary: Verifica a saúde do serviço
+      description: Este endpoint pode ser utilizado para verificar se o servidor está disponível e acessível.
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: string
+  /auth/login:
+    post:
+      tags:
+        - Autenticação
+      summary: Gera um token de autenticação para a plataforma encontrada
+      description: >
+        O resultado desse endpoint deve ser inserido no header de autenticação. Exemplo:
+          `Authorization: Bearer SEU_TOKEN_AQUI`
+        Esse header será obrigatório em todos os endpoints que exigem autenticação.
+        O token gerado é um JWT, e contém as informações básicas do usuário, que podem ser acessadas ao decodificar a string, ou através do endopoint `/auth/me`.
+        O token possui validade de *3600* segundos, é importante que seja gerado um novo token atualizado através do endpoint `/auth/refresh-token` caso seja necessário manter o acesso
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        401:
+          description: Senha inválida ou incorreta
+        404:
+          description: Usuário não encontrado na plataform
+  /auth/register:
+    post:
+      tags:
+        - Autenticação
+      summary: Realiza o cadastro de no um novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          description: Senha inválida ou incorreta
+        404:
+          description: Usuário não encontrado na plataform
+  /auth/refresh:
+    get:
+      tags:
+        - Autenticação
+      summary: Gera um novo token de autenticação atualizado com uma nova data de expiração
+      description: "Atenção: essa ação só pode ser utilizada uma vez por token. Caso o token resultante seja perdido será necessário uma nova autenticação."
+      security:
+        - client:
+        - admin:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        401:
+          description: Token inválido
+  /auth/logout:
+    post:
+      tags:
+        - Autenticação
+      summary: realiza o logout do usuario
+      security:
+        - client:
+        - admin:
+      responses:
+        200:
+          description: OK
+        401:
+          description: Token inválido
+  /auth/me:
+    get:
+      tags:
+        - Autenticação
+      summary: Busca os dados do usuário logado
+      security:
+        - client:
+        - admin:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'

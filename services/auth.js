@@ -57,6 +57,14 @@ export default {
     if (!user) throw new RequestError(400, 'Usuário não encontrado')
     return user
   },
+  async register(payload) {
+    const params = await validateRegisterParams(payload)
+    const user = await models.User.create(params)
+    return {
+      name: user.name,
+      email: user.email,
+    }
+  }
 }
 
 function validateSignInParams ({email, password}) {
@@ -69,4 +77,20 @@ function validateTokenParams(payload) {
   if (!id) throw new RequestError(400, 'id is required')
   if (!name) throw new RequestError(400, 'name is required')
   if (!email) throw new RequestError(400, 'email is required')
+  return
+}
+
+async function validateRegisterParams(payload) { 
+  const { name, email, password } = payload
+  let params = {}
+  if (!name) throw new RequestError(400, 'Informe o Nome do Usuário')
+  params.name = name
+  if (!email) throw new RequestError(400, 'Informe o email do usuário')
+  const emailIsAlreadyTaken = await models.User.findOne({ where: { email } })
+  if (emailIsAlreadyTaken) throw new RequestError(400, 'O email já está sendo utlizado')
+  params.email = email
+  if (!password) throw new RequestError(400, 'Informe a senha para autenticação')
+  if (password.length < 5) throw new RequestError(400, 'A senha deve ter pelo menos 5 caractéres')
+  params.password = password
+  return params
 }
