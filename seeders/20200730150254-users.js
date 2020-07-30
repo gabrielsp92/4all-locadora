@@ -17,7 +17,6 @@ module.exports = {
     const hash2 = await bcrypt.hash('clientclient', bcrypt.genSaltSync(8));
     await queryInterface.bulkInsert('Users', [
       {
-        id: 1,
         name: 'Client',
         email: 'client@client.com',
         password: hash2,
@@ -25,7 +24,6 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        id: 2,
         name: 'Admin',
         email: 'admin@admin.com',
         password: hash,

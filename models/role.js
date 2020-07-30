@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         through: 'UserRole',
         as: 'roles',
         foreignKey: 'roleId',
-        otherKey: 'userId'
+        otherKey: 'userId',
+        timestamps: false,
       });
     }
   };
