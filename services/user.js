@@ -90,7 +90,32 @@ export default {
     return user
   },
   async promoteToAdmin(id) {
-
+    if (!id) throw new RequestError(400, 'Informe o Id do usuário')
+    const user = await models.User.findByPk(id, { ...selectionScope, include: includeRoles })
+    if (!user) throw new RequestError(400, 'Usuário não encontrado')
+    if (user.roles.some(({ id }) => id == 2)) return user
+    // create admin relation
+    await models.UserRole.create({
+      userId: user.id, // User Id
+      roleId: 2, // Default Admin ID
+    })
+    return user.reload({...selectionScope, include: includeRoles})
+  },
+  async demoteToClient(id) {
+    if (!id) throw new RequestError(400, 'Informe o Id do usuário')
+    const user = await models.User.findByPk(id, { ...selectionScope, include: includeRoles })
+    if (!user) throw new RequestError(400, 'Usuário não encontrado')
+    if (!user.roles.some(({ id }) => id == 2)) return user
+    // delete admn relation
+    const userRole = await models.UserRole.findOne({ where: { userId: user.id, roleId: 2 } })
+    if (userRole) await userRole.destroy()
+    // add client relation
+    if (user.roles.some(({ id }) => id == 1)) return user.reload({...selectionScope, include: includeRoles})
+    await models.UserRole.create({
+      userId: user.id, // User Id
+      roleId: 1, // Default Admin ID
+    })
+    return user.reload({...selectionScope, include: includeRoles})
   },
 }
 

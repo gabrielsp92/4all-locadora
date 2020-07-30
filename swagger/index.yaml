@@ -369,3 +369,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+  /admin/user/{userId}/promote:
+    put:
+      tags:
+        - Usuários
+        - Administrador
+      summary: Promove um clientee a administrador pelo id informado
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          description: Id do usuário a ser promovido
+      security:
+        - admin:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /admin/user/{userId}/demote:
+    put:
+      tags:
+        - Usuários
+        - Administrador
+      summary: Rebaixa um administrador a cliente pelo id informado
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          description: Id do usuário a ser rebaixado
+      security:
+        - admin:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'

@@ -24,4 +24,14 @@ export default {
     const result = await UserService.deleteUser(userId)
     res.send(result)
   },
+  async promote(req, res) {
+    const { userId } = req.params
+    const result = await UserService.promoteToAdmin(userId)
+    res.send(result)
+  },
+  async demote(req, res) {
+    const { userId } = req.params
+    const result = await UserService.demoteToClient(userId)
+    res.send(result)
+  }
 }
