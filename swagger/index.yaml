@@ -37,10 +37,16 @@ components:
       properties:
         email:
           type: string
+          example: foo@bar.com
+          description: Email de autenticação do usuário
         password:
           type: string
+          example: foobar
+          description: Senha de autenticação do usuário
         name:
           type: string
+          example: foo bar
+          description: Nome do usuário
       reuired:
         - email
         - password
@@ -49,8 +55,12 @@ components:
       properties:
         email:
           type: string
+          example: admin@admin.com
+          description: email de autenticação
         password:
           type: string
+          example: adminadmin
+          description: Senha de autenticação
       required:
         - email
         - password
@@ -62,30 +72,85 @@ components:
       properties:
         email:
           type: string
+          example: foo@bar.com
+          description: Email do usuário
         password:
           type: string
+          example: foobar
         name:
           type: string
+          example: foo bar
+          description: Nome do usuário
         id:
           type: integer
+          example: 3
+          description: Id do usuário
     PatchUser:
       properties:
         email:
           type: string
+          example: foo@bar.com
+          description: Email do usuário
         password:
           type: string
+          example: foobar
         name:
           type: string
+          example: foo bar
+          description: Nome do usuário
     Movie:
       properties:
         director:
           type: string
+          example: Foo bar
+          description: Nome do diretor do filme
         title:
           type: string
+          example: Foo bar
+          description: Título do filme
         quantity:
           type: integer
+          example: 2
+          description: Quantidade de unidades para locação cadastrados
+        quantityAvailable:
+          type: integer
+          example: 2
+          description: Quantidade de unidades disponíveis locação cadastrados
         id:
           type: integer
+          example: 4
+          description: Chave identificadora do filme
+    UserRent:
+      properties:
+        movie:
+          type: string
+          example: Foo bar
+          description: Nome do diretor do filme
+        createdAt:
+          type: date
+          description: Data de criação
+        deliveredAt:
+          type: date
+          example: 2
+          description: Data de entrega
+        id:
+          type: integer
+          example: 4
+          description: Chave identificadora da locação
+    CreateMovie:
+      properties:
+        director:
+          type: string
+          example: Foo bar
+          description: Nome do diretor do filme
+        title:
+          type: string
+          example: Foo bar
+          description: Nome do Título do filme
+        quantity:
+          type: integer
+          example: 2
+          description: Quantidade de unidades para locação cadastrados
     ListUsers:
       properties:
         page:
@@ -99,6 +164,32 @@ components:
           items:
             type: object
             $ref: '#/components/schemas/User' 
+    ListMovies:
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        totalItems:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/Movie' 
+    ListRent:
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        totalItems:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/Rent'
 
 tags:
   - name: Sistema
@@ -127,6 +218,7 @@ paths:
           description: Successful operation
           schema:
             type: string
+  ## AUTH
   /auth/login:
     post:
       tags:
@@ -223,6 +315,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+  ## USER
   /user:
     patch:
       tags:
@@ -409,3 +502,237 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+  ## Movies
+  /movie:
+    get:
+      tags:
+        - Filmes
+      summary: Busca os usuários cadastrados pelos parametros informados na query
+      parameters:
+        - in: query
+          name: per_page
+          description: O número de registros por página a ser buscado
+          schema:
+            type: integer
+        - in: query
+          name: page
+          description: O número da página a ser buscado
+          schema:
+            type: integer
+        - in: query
+          name: sortBy
+          description: O nome atributo no qual deseja ordenar a busca
+          schema:
+            type: string
+        - in: query
+          name: descending
+          description: Define se a ordenação é decrescente
+          schema:
+            type: boolean
+        - in: query
+          name: search
+          description: O texto de busca correspondendo ao nome ou email desejado
+          schema:
+            type: string
+        - in: query
+          name: onlyAvailables
+          description: Define se a busca só retornará filmes disponíveis para locação
+          schema:
+            type: boolean
+      security:
+        - admin:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMovies'
+  /movie/{movieId}:
+    get:
+      tags:
+        - Filmes
+      summary: Busca um filme pelo id informado
+      parameters:
+        - in: path
+          name: movieId
+          type: integer
+          description: Id do filme a ser pesquisado
+      security:
+        - admin:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+  /admin/movie:
+    post:
+      tags:
+        - Filmes
+        - Administrador
+      summary: Cria um novo filme
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMovie'
+      security:
+        - admin:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+  /admin/movie/{movieId}:
+    patch:
+      tags:
+        - Filmes
+        - Administrador
+      summary: Atualiza os dados do filme encontrado pelo Id informado
+      parameters:
+        - in: path
+          name: movieId
+          type: integer
+          description: Id do filme a ser alterado
+      security:
+        - admin:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMovie'
+      responses:
+          200:
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Movie'
+    delete:
+      tags:
+        - Filmes
+        - Administrador
+      summary: Deleta um filme pelo id informado
+      parameters:
+        - in: path
+          name: movieId
+          type: integer
+          description: Id do filme a ser excluído
+      security:
+        - admin:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+  ##  Rents
+  /rent:
+    get:
+      tags:
+        - Locações
+      summary: Lista as locações do usuário logado
+      description: Busca todas locações do usuário logado pelos paramtros
+      security:
+        - client:
+      parameters:
+        - in: query
+          name: per_page
+          description: O número de registros por página a ser buscado
+          schema:
+            type: integer
+        - in: query
+          name: page
+          description: O número da página a ser buscado
+          schema:
+            type: integer
+        - in: query
+          name: sortBy
+          description: O nome atributo no qual deseja ordenar a busca
+          schema:
+            type: string
+        - in: query
+          name: descending
+          description: Define se a ordenação é decrescente
+          schema:
+            type: boolean
+        - in: query
+          name: search
+          description: O texto de busca que corresponde ao filme ou usuário
+          schema:
+            type: string
+      responses:
+          200:
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ListRent'
+  /rent/{rentId}:
+    get:
+
+  /rent/movie/{movieId}:
+    post:
+    get:
+  /rent/{rentId}/return:
+    post:
+  /admin/rent:
+    get:
+      tags:
+        - Locações
+        - Administrador
+      summary: Lista todas as locações cadastradas
+      description: Busca todas locações do usuário logado pelos paramtros
+      security:
+        - admin:
+      parameters:
+        - in: query
+          name: per_page
+          description: O número de registros por página a ser buscado.
+          schema:
+            type: integer
+        - in: query
+          name: page
+          description: O número da página a ser buscado.
+          schema:
+            type: integer
+        - in: query
+          name: sortBy
+          description: O nome atributo no qual deseja ordenar a busca.
+          schema:
+            type: string
+        - in: query
+          name: descending
+          description: Define se a ordenação é decrescente.
+          schema:
+            type: boolean
+        - in: query
+          name: search
+          description: O texto de busca que corresponde ao filme ou usuário
+          schema:
+            type: string
+        - in: query
+          name: userId
+          description: Id do usuário, ao enviar esse atributo serão listados somente os registros referentes ao usuário.
+          schema:
+            type: string
+      responses:
+          200:
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ListRent'
+  /admin/rent/{rentId}:
+
+  /admin/rent/{rentId}/return:
+    
+
+  
