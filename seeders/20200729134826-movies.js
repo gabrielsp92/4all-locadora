@@ -10,6 +10,7 @@ module.exports = {
       title: 'Pulp Fiction',
       director: 'Quentin Tarantino',
       quantity: 2,
+      quantityAvailable: 2,
       createdAt: new Date(),
       updatedAt: new Date()
     },
@@ -17,6 +18,7 @@ module.exports = {
       title: 'Lord Of The Rings Trilogy',
       director: 'Peter Jackson',
       quantity: 1,
+      quantityAvailable: 1,
       createdAt: new Date(),
       updatedAt: new Date()
     },
@@ -24,6 +26,7 @@ module.exports = {
       title: 'Midsommar',
       director: 'Ari Aster',
       quantity: 3,
+      quantityAvailable: 3,
       createdAt: new Date(),
       updatedAt: new Date()
     },

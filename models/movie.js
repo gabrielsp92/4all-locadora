@@ -27,6 +27,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Movie',
+    hooks: {
+      beforeCreate: async (user, options) => {
+        user.quantityAvailable = user.quantity
+      },
+    }
   });
   return Movie;
 };
