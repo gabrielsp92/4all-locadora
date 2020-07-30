@@ -14,8 +14,8 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER
       },
-      returned: {
-        type: Sequelize.BOOLEAN
+      deliveredAt: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,

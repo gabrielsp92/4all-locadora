@@ -8,8 +8,14 @@
 # install dependencies
 $ npm install
 
-#compose container with postgres
+# compose container with postgres
 $ docker-compose up -d
+
+# migrate database
+$ npx sequelize-cli db:migrate
+
+# seed database
+$ npx sequelize-cli db:seed:all
 
 # serve with hot reload at localhost:4000
 $ npm run dev
@@ -19,12 +25,6 @@ $ npm start
 
 # test application
 $ npm run test
-
-# migrate database
-$ npx sequelize-cli db:migrate
-
-# seed database
-$ npx sequelize-cli db:seed:all
 
 # API DOCS: http://localhost:4000/api-docs
 ```

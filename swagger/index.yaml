@@ -58,7 +58,6 @@ components:
       properties:
         token:
           type: string
-        
     User:
       properties:
         email:
@@ -69,6 +68,14 @@ components:
           type: string
         id:
           type: integer
+    PatchUser:
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
     Movie:
       properties:
         director:
@@ -79,17 +86,33 @@ components:
           type: integer
         id:
           type: integer
+    ListUsers:
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        totalItems:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/User' 
+
 tags:
-  - name: Autenticação
-    description: Rotas utilizadas para autenticação na plataforma
   - name: Sistema
     description: informações e disponibilidade do sistema
+  - name: Autenticação
+    description: Rotas utilizadas para autenticação na plataforma
   - name: Usuários
     description: Gestão de Usuários
-  - name: Locações
-    description: Gestão de Locações
   - name: Filmes
     description: Gestão de Filmes
+  - name: Locações
+    description: Gestão de Locações
+  - name: Administrador
+    description: Rotas exclusivas para usuários do tipo administrador
 
 ## PATHS
 paths:
@@ -193,6 +216,146 @@ paths:
       security:
         - client:
         - admin:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /user:
+    patch:
+      tags:
+        - Usuários
+      summary: Atualiza os dados do usuário logado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchUser'
+      security:
+        - client:
+        - admin:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /admin/user:
+    get:
+      tags:
+        - Usuários
+        - Administrador
+      summary: Lista os usuários cadastrados pelos parametros informados na query, page, per_page e search
+      parameters:
+        - in: query
+          name: per_page
+          description: O número de registros por página a ser buscado
+          schema:
+            type: integer
+        - in: query
+          name: page
+          description: O número da página a ser buscado
+          schema:
+            type: integer
+        - in: query
+          name: sortBy
+          description: O nome atributo no qual deseja ordenar a busca
+          schema:
+            type: string
+        - in: query
+          name: descending
+          description: Define se a ordenação é decrescente
+          schema:
+            type: boolean
+        - in: query
+          name: search
+          description: O texto de busca correspondendo ao nome ou email desejado
+          schema:
+            type: string
+      # security:
+      #   - admin:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUsers'
+    post:
+      tags:
+        - Usuários
+        - Administrador
+      summary: Cria um novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+      # security:
+      #   - admin:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /admin/user/{userId}:
+    get:
+      tags:
+        - Usuários
+        - Administrador
+      summary: Busca um usuário pelo id informado
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          description: Id do usuário a ser pesquisado
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      tags:
+        - Usuários
+        - Administrador
+      summary: Deleta um usuário pelo id informado
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          description: Id do usuário a ser excluído
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    patch:
+      tags:
+        - Usuários
+        - Administrador
+      summary: Atualiza os dados do usuário encontrado pelo Id informado
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          description: Id do usuário a ser alterado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchUser'
       responses:
         200:
           description: OK

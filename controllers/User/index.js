@@ -1,8 +1,6 @@
 const autoLoad = [
-  'Auth',
-  'User',
-  'Movie',
-  'Rent',
+  'admin',
+  'client',
 ]
 
 export default autoLoad.reduce((acc, moduleName) => ({
