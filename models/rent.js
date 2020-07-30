@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Rent.init({
     movieId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
-    returned: DataTypes.BOOLEAN
+    deliveredAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Rent',
