@@ -25,6 +25,8 @@ $ npx sequelize-cli db:migrate
 
 # seed database
 $ npx sequelize-cli db:seed:all
+
+# API DOCS: http://localhost:4000/api-docs
 ```
 
 ## What was used here
@@ -43,11 +45,11 @@ $ npx sequelize-cli db:seed:all
 ## Project bootstrapping
 
 - config - contains config file, which tells CLI how to connect with database
-- models - contains all models for your project
-- migrations - contains all migration files
-- seeders - contains all seed files
-- tests - contains all tests code
-- services - contains all services codes
-- controllers - contains all controllers codes
-- middlewares - contains all middlewares codes
-- routes - contains all declared express routes
+- models - contains all models and data structure
+- migrations - contains all database migration files
+- seeders - contains all seed files,
+- tests - contains all tests code,
+- services - contains all services and business logic
+- controllers - contains all controllers that links routes with services
+- middlewares - contains all middlewares, like jwt validation for authenticated users
+- routes - contains all declared express http routes
