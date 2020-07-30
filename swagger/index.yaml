@@ -276,8 +276,8 @@ paths:
           description: O texto de busca correspondendo ao nome ou email desejado
           schema:
             type: string
-      # security:
-      #   - admin:
+      security:
+        - admin:
       responses:
         200:
           description: OK
@@ -296,8 +296,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Register'
-      # security:
-      #   - admin:
+      security:
+        - admin:
       responses:
         200:
           description: OK
@@ -316,6 +316,8 @@ paths:
           name: userId
           type: integer
           description: Id do usuário a ser pesquisado
+      security:
+        - admin:
       responses:
         200:
           description: OK
@@ -333,6 +335,8 @@ paths:
           name: userId
           type: integer
           description: Id do usuário a ser excluído
+      security:
+        - admin:
       responses:
         200:
           description: OK
@@ -350,6 +354,8 @@ paths:
           name: userId
           type: integer
           description: Id do usuário a ser alterado
+      security:
+        - admin:
       requestBody:
         required: true
         content:

@@ -3,8 +3,12 @@ import models from '../models'
 import Sequelize from 'sequelize'
 
 const Op = Sequelize.Op
-const selectionScope = { attributes: { exclude: ['password', 'refreshToken'] } }
 
+// Default Options
+const selectionScope = { attributes: { exclude: ['password', 'refreshToken'] } }
+const includeRoles = [ { model: models.Role, as: 'roles', through: { attributes: [] }, attributes: { exclude: [ 'createdAt', 'updatedAt'] } } ]
+
+// Service
 export default {
   async patchUser(id, payload) {
     if (!id) throw new RequestError(400, 'Informe o Id do usuário')
@@ -17,7 +21,7 @@ export default {
   },
   async getUser(id) {
     if (!id) throw new RequestError(400, 'Informe o Id do usuário')
-    const user = await models.User.findByPk(id, selectionScope)
+    const user = await models.User.findByPk(id, { ...selectionScope, include: includeRoles })
     if (!user) throw new RequestError(400, 'Usuário não encontrado')
     return user
   },
@@ -30,7 +34,8 @@ export default {
       limit: per_page,
       attributes: {
         exclude: ['password', 'refreshToken'],
-      }
+      },
+      include: includeRoles
     }
     if (search) {
       // search with case insensitive

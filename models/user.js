@@ -13,11 +13,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.Movie, {
+      models.User.belongsToMany(models.Movie, {
         through: 'Rent',
         as: 'rents',
         foreignKey: 'userId',
         otherKey: 'movieId'
+      });
+      models.User.belongsToMany(models.Role, {
+        through: 'UserRole',
+        as: 'roles',
+        foreignKey: 'userId',
+        otherKey: 'roleId'
       });
     }
     static generateHash(password) {
@@ -46,8 +52,18 @@ module.exports = (sequelize, DataTypes) => {
     hooks: {
       beforeCreate: async (user, options) => {
         user.password = await bcrypt.hash(user.password, bcrypt.genSaltSync(8));
+      },
+      afterCreate: async (user, options) => {
+        AddUserDefaultRole(user, payload)
       }
     }
   });
   return User;
 };
+
+function AddUserDefaultRole(user, payload) {
+  Model.UserRole.create({
+    userId: user.id, // User Id
+    roleId: 1, // Default Role ID
+  })
+}
