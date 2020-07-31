@@ -123,7 +123,10 @@ async function validatePatchParams(user, payload) {
   const { name, email, password } = payload
   let params = {}
   if (name) params.name = name
-  if (password) params.password  = password
+  if (password) {
+    if (password.length < 5) throw new RequestError(400, 'A senha deve ter pelo menos 5 caractéres')
+    params.password = await models.User.generateHash(password)
+  }
   if (email && email !== user.email) {
     //validate email
     const isEmailTaken = await models.User.findOne({ where: {email} })

@@ -7,10 +7,10 @@ export const router = Router()
 export default router
 
 // ## CLIENT ROUTES
-router.get('/movie', auth, Controller('Movie-client-list'))
-router.get('/movie/:movieId', auth, Controller('Movie-client-get'))
+router.get('/movies', auth, Controller('Movie-client-list'))
+router.get('/movies/:movieId', auth, Controller('Movie-client-get'))
 
 // ## ADMIN ROUTES
-router.post('/admin/movie', auth, adminOnly, Controller('Movie-admin-create'))
-router.patch('/admin/movie/:movieId', auth, adminOnly, Controller('Movie-admin-patch'))
-router.delete('/admin/movie/:movieId', auth, adminOnly, Controller('Movie-admin-delete'))
+router.post('/admin/movies', auth, adminOnly, Controller('Movie-admin-create'))
+router.patch('/admin/movies/:movieId', auth, adminOnly, Controller('Movie-admin-patch'))
+router.delete('/admin/movies/:movieId', auth, adminOnly, Controller('Movie-admin-delete'))
