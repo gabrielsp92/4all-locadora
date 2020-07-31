@@ -49,7 +49,7 @@ export default {
             }
           ),
           Sequelize.where(
-            Sequelize.fn('lower', Sequelize.col('name')),
+            Sequelize.fn('lower', Sequelize.col('email')),
             {
               [Op.like]: `%${lowerSearch}%`
             }
