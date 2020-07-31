@@ -27,6 +27,12 @@ $ npm start
 $ npm run test
 
 # API DOCS: http://localhost:4000/api-docs
+# sample admin:
+  > email: admin@admin.com
+  > password: adminadmin
+# sample client:
+  > email: client@client.com
+  > password: clientclient
 ```
 
 ## What was used here
