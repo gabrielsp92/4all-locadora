@@ -12,9 +12,13 @@ $ npm install
 $ docker-compose up -d
 
 # migrate database
+$ node_modules/.bin/sequelize db:migrate
+# with sequelize-cli
 $ npx sequelize-cli db:migrate
 
 # seed database
+$ node_modules/.bin/sequelize db:seed:all
+# with sequelize-cli
 $ npx sequelize-cli db:seed:all
 
 # serve with hot reload at localhost:4000
@@ -27,13 +31,33 @@ $ npm start
 $ npm run test
 
 # API DOCS: http://localhost:4000/api-docs
-# sample admin:
-  > email: admin@admin.com
-  > password: adminadmin
-# sample client:
-  > email: client@client.com
-  > password: clientclient
 ```
+
+## Instructions
+After runing the project in dev mode, you can access the documentation with every route specification at
+  - http://localhost:4000/api-docs
+
+If you generated the database from migrate and seed as described above, you can use theese default sample users to authenticate.
+  - admin:
+    - email: admin@admin.com
+    - password: adminadmin
+  - client:
+    - email: admin@admin.com
+    - password: clientclient
+
+The authorization token should be in the header with the following format
+  - Authorization: Bearer < token >
+
+If you need to change any database configuration params, you can do it at
+  - ./config
+    - config.json
+
+If you are using the docker container setted up from docker-compose.yaml file, the default pgAdmin4 credentals are
+  - email: admin@admin
+  - password: admin
+
+and postgres default password:
+  - password: adminadmin
 
 ## What was used here
 - [Node.js](https://nodejs.org/api/) - JavaScript runtime
