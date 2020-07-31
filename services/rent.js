@@ -4,18 +4,28 @@ import Sequelize from 'sequelize'
 
 const Op = Sequelize.Op
 
+const selectionScope = {
+  include: [
+    { model: models.User, as: 'user', attributes: ['id', 'name', 'email'] },
+    { model: models.Movie, as: 'movie', attributes: ['id', 'title', 'director'] },
+  ],
+  attributes: {
+    exclude: ['userId', 'movieId', 'updatedAt']
+  },
+} 
+
 export default {
   async getRent(rentId, agentId) {
     if (!rentId) throw new RequestError(400, 'Informe o Id da locação')
     let query = { where: { id: rentId } }
     // if agentId is given it should validate if it belongs to him
-    if (id) query.where.userId = agentId
-    const result = await models.Rent.findOne(query)
+    if (agentId) query.where.userId = agentId
+    const result = await models.Rent.findOne({ ...query, ...selectionScope })
     if (!result) throw new RequestErrir(400, 'Locação não encontrada')
     return result
   },
   async listRents (query) {
-    let { page, per_page, search, sortBy, descending, userId } = query
+    let { page, per_page, search, sortBy, descending, userId, onlyOpened, onlyClosed } = query
     page = parseInt(page) || 1
     per_page = parseInt(per_page) || 10
     let findQuery = {
@@ -33,7 +43,13 @@ export default {
       findQuery.where.userId = userId
     }
     if (search) {}
-    const items = await models.Rent.findAll(findQuery)
+    if (onlyOpened == 'true') {
+      findQuery.where.deliveredAt = { [Op.is]: null }
+    }
+    if (onlyClosed == 'true') {
+      findQuery.where.deliveredAt = { [Op.not]: null }
+    }
+    const items = await models.Rent.findAll({...findQuery, ...selectionScope})
     const totalItems = await models.Rent.count({ where: findQuery.where })
     return {
       page,
@@ -47,14 +63,13 @@ export default {
     let query = { where: { id: rentId } }
     // if agentId is given it should validate if it belongs to him
     if (agentId) query.where.userId = agentId
-    // const result = await models.Rent.update({ deliveredAt: new Date() }, query )
-    const rent = await models.Rent.findOne(query)
-    if (!rent) throw new RequestErrir(400, 'Locação não encontrada')
+    const rent = await models.Rent.findOne({ ...query, ...selectionScope })
+    if (!rent) throw new RequestError(400, 'Locação não encontrada')
     if (rent.deliveredAt) return rent
     rent.deliveredAt = new Date()
     await rent.save()
     // Change quantity available in movie
-    await models.Movie.increment('quantityAvailable', { where: { id: rent.movieId } })
+    await models.Movie.increment('quantityAvailable', { where: { id: rent.movie.id } })
     return rent
   },
   async createRent(movieId, userId) {
@@ -65,11 +80,12 @@ export default {
     })
     // Change quantity available in movie
     await models.Movie.decrement('quantityAvailable', { where: { id: movieId } })
-    return rent
+    const formattedRent = await models.Rent.findOne({  where: { id: rent.id }, ...selectionScope })
+    return formattedRent
   },
   async deleteRent(rentId) {
     if (!rentId) throw new RequestError(400, 'Informe o ID da locação desejada')
-    const rent = await models.Rent.findOne({id: rentId})
+    const rent = await models.Rent.findOne({ where: { id: rentId }, ...selectionScope })
     if (!rent) throw new RequestError(400, 'Locação não encontrada')
     await rent.destroy()
     return rent
