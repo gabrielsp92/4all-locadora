@@ -13,7 +13,7 @@ export const jwtExpirationInterval = process.env.JWT_EXPIRATION_MINUTES
 
 export const logs = isProd ? 'combined' : 'dev'
 
-if (isDev) {
+if (isDev || isTest) {
   console.log(
     'Environment: ',
     require('util').inspect(module.exports, { colors: true }),

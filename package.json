@@ -4,7 +4,7 @@
   "description": "4all challenge",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cross-env NODE_ENV=test mocha --require @babel/register",
     "start": "babel-node index.js",
     "dev": "nodemon -e js,json,yaml --exec npm run start"
   },
@@ -28,7 +28,9 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.10.4",
     "@babel/plugin-proposal-optional-catch-binding": "^7.10.4",
     "@babel/plugin-proposal-optional-chaining": "^7.10.4",
+    "@babel/polyfill": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
+    "@babel/register": "^7.10.5",
     "babel-node": "0.0.1-security",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
@@ -41,9 +43,16 @@
     "nodemon": "^2.0.4",
     "pg": "^8.3.0",
     "rand-token": "^1.0.1",
+    "regenerator-runtime": "^0.13.7",
     "sequelize": "^6.3.3",
     "sequelize-cli": "^6.2.0",
     "swagger-ui-express": "^4.1.4",
     "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "cross-env": "^7.0.2",
+    "mocha": "^8.1.0",
+    "supertest": "^4.0.2"
   }
 }

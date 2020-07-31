@@ -21,11 +21,11 @@ export default {
     // if agentId is given it should validate if it belongs to him
     if (agentId) query.where.userId = agentId
     const result = await models.Rent.findOne({ ...query, ...selectionScope })
-    if (!result) throw new RequestErrir(400, 'Locação não encontrada')
+    if (!result) throw new RequestError(400, 'Locação não encontrada')
     return result
   },
   async listRents (query) {
-    let { page, per_page, search, sortBy, descending, userId, onlyOpened, onlyClosed } = query
+    let { page, per_page, search, sortBy, descending, userId, movieId, onlyOpened, onlyClosed } = query
     page = parseInt(page) || 1
     per_page = parseInt(per_page) || 10
     let findQuery = {
@@ -40,8 +40,14 @@ export default {
       ]
     }
     if (userId) {
+      userId = parseInt(userId) || undefined
       findQuery.where.userId = userId
     }
+    if (movieId) {
+      movieId = parseInt(movieId) || undefined
+      findQuery.where.movieId = movieId
+    }
+    console.log({movieId})
     if (search) {}
     if (onlyOpened == 'true') {
       findQuery.where.deliveredAt = { [Op.is]: null }

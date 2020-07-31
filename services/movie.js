@@ -91,6 +91,7 @@ function validatePostParams(payload) {
   if (!director) throw new RequestError(400, 'Informe o título do filme')
   params.director = director
   if (!quantity) throw new RequestError(400, 'Informe o título do filme')
+  if (quantity < 1) throw new RequestError(400, 'A quantidade deve ser um numero positivo')
   params.quantity = quantity
   return params
 }
@@ -100,6 +101,7 @@ function validatePatchParams(movie, payload) {
   if (title && title !== movie.title) params.title = title
   if (director && director !== movie.director) params.director = director
   if (quantity !== undefined && quantity !== movie.quantity) {
+    if (quantity < 0) throw new RequestError(400, 'A quantidade deve ser um numero positivo')
     params.quantity = quantity
     // change available quantity
     const difference = quantity - movie.quantity
