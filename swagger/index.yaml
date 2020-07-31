@@ -549,8 +549,13 @@ paths:
           schema:
             type: string
         - in: query
+          name: onlyUnavailables
+          description: Define se a busca só retornará filmes indisponíveis para locação
+          schema:
+            type: boolean
+        - in: query
           name: onlyAvailables
-          description: Define se a busca só retornará filmes disponíveis para locação
+          description: Define se a busca só retornará filmes disponíveis para locação, esse valor sobrepõe o atributo onlyUnavailables
           schema:
             type: boolean
       security:

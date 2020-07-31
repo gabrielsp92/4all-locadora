@@ -33,12 +33,13 @@ export default {
     return movie
   },
   async listMovies(query) {
-    let { page, per_page, search, sortBy, descending } = query
+    let { page, per_page, search, sortBy, descending, onlyAvailables, onlyUnavailables } = query
     page = parseInt(page) || 1
     per_page = parseInt(per_page) || 10
     let findQuery = {
       offset: ( page - 1 ) * per_page,
       limit: per_page,
+      where: {},
     }
     if (sortBy) {
       findQuery.order = [
@@ -64,6 +65,12 @@ export default {
           ),
         ]
       }
+    }
+    if (onlyUnavailables == 'true') {
+      findQuery.where.quantityAvailable = { [Op.lt]: 1, }
+    }
+    if (onlyAvailables == 'true') {
+      findQuery.where.quantityAvailable = { [Op.gt]: 0, }
     }
     const items = await models.Movie.findAll(findQuery)
     const totalItems = await models.Movie.count({ where: findQuery.where })
@@ -92,7 +99,7 @@ function validatePatchParams(movie, payload) {
   const { title, director, quantity } = payload
   if (title && title !== movie.title) params.title = title
   if (director && director !== movie.director) params.director = director
-  if (quantity && quantity !== movie.quantity) {
+  if (quantity !== undefined && quantity !== movie.quantity) {
     params.quantity = quantity
     // change available quantity
     const difference = quantity - movie.quantity

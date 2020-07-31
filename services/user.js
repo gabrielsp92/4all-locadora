@@ -133,7 +133,6 @@ async function validatePatchParams(user, payload) {
     if (isEmailTaken) throw new RequestError(400, 'o Email já está em uso')
     params.email = email
   }
-  console.log(params)
   return params 
 }
 
