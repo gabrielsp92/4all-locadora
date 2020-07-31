@@ -40,7 +40,7 @@ export default {
     const { email, password } = payload
     const user = await models.User.findOne({ where: { email }, include: [ { model: models.Role, as: 'roles', through: { attributes: [] }, attributes: { exclude: [ 'createdAt', 'updatedAt'] } } ] })
     if (!user) throw new RequestError(400, 'Usuário não encontrado')
-    const isValid =  await models.User.validatePassword(password, user.password)
+    const isValid = await models.User.validatePassword(password, user.password)
     if(!isValid) throw new RequestError(400, 'Senha inválida')
     // generate token
     if (!user.refreshToken) {
