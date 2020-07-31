@@ -126,10 +126,10 @@ components:
           description: Chave identificadora do filme
     Rent:
       properties:
-        movie:
-          type: string
-          example: Foo bar
-          description: Nome do diretor do filme
+        id:
+          type: integer
+          example: 4
+          description: Chave identificadora da locação
         createdAt:
           type: string
           example: '2020-07-30T22:53:43.742Z'
@@ -138,10 +138,38 @@ components:
           type: string
           example: '2020-07-30T22:53:43.742Z'
           description: Data de entrega
-        id:
-          type: integer
-          example: 4
-          description: Chave identificadora da locação
+        movie:
+          type: object
+          description: Dados do filme alugado
+          properties:
+            id:
+              type: integer
+              example: 1
+              description: Id do filme alugado
+            title:
+              type: string
+              example: Foo
+              description: Título do filme alugado
+            director:
+              type: string
+              example: Bar
+              description: Diretor do filme alugado
+        user:
+          type: object
+          description: Dados do usuário
+          properties:
+            id:
+              type: integer
+              example: 1
+              description: Id do usuário responsável pela locação
+            name:
+              type: string
+              example: Foo Bar
+              description: Nome do usuário responsável pela locação
+            email:
+              type: string
+              example: Foo@bar.com
+              description: email do usuário responsável pela locação
     CreateMovie:
       properties:
         director:
@@ -559,7 +587,7 @@ paths:
           schema:
             type: boolean
       security:
-        - admin:
+        - client:
       responses:
         200:
           description: OK
@@ -579,7 +607,7 @@ paths:
           type: integer
           description: Id do filme a ser pesquisado
       security:
-        - admin:
+        - client:
       responses:
         200:
           description: OK
@@ -693,12 +721,12 @@ paths:
           name: onlyOpened
           description: Buscar somente as locações em aberto.
           schema:
-            type: string
+            type: boolean
         - in: query
           name: onlyClosed
           description: Buscar somente as locações com data de devolução cadastrada, sobrepõe o atributo onlyOpened
           schema:
-            type: string
+            type: boolean
       responses:
           200:
             description: OK
@@ -756,7 +784,7 @@ paths:
       parameters:
         - in: path
           name: rentId
-          description: Id do filme desejado
+          description: Id da locação desejado
       security:
         - client:
       responses:
@@ -839,7 +867,7 @@ paths:
           name: rentId
           description: Id da locação
       security:
-        - client:
+        - admin:
       responses:
         200:
           description: OK
@@ -857,7 +885,7 @@ paths:
           name: rentId
           description: Id da locação
       security:
-        - client:
+        - admin:
       responses:
         200:
           description: OK
@@ -877,7 +905,7 @@ paths:
           name: rentId
           description: Id da locação desejado
       security:
-        - client:
+        - admin:
       responses:
         200:
           description: OK
@@ -900,7 +928,7 @@ paths:
           name: usereId
           description: Id do usuário desejado
       security:
-        - client:
+        - admin:
       responses:
         200:
           description: OK
