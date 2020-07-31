@@ -1,7 +1,11 @@
 openapi: 3.0.0
 info:
   title: 4All Locadora
-  description: Essa é a documentação do projeto Desafio Locadora para a 4all
+  description: >
+    Seja bem vindo a documentação da API Rest 4all Locadora. Abaixo você encontra a descrição das rotas e ao expandir, poderá executar e ver detalhes das requisições.
+    Para se `Autenticar`, execute a rota POST /auth/login, com o usuário sugerido, ou outro previamente registrado, Copie o atributo `token`, 
+    clique no botão `Authorize` abaixo, e cole no seguinte formato: `Bearer <token>`, clique em authorize para salvar as alterações e suas requisições irão enviar o jwt no header. 
+    Usuários do tipo administrador tem acesso irrestrito no sistema enquanto os do tipo cliente, só tem permissão para as rotas exclusivas
   version: 1.0
   contact:
     name: Gabriel Soares Pereira
@@ -120,18 +124,19 @@ components:
           type: integer
           example: 4
           description: Chave identificadora do filme
-    UserRent:
+    Rent:
       properties:
         movie:
           type: string
           example: Foo bar
           description: Nome do diretor do filme
         createdAt:
-          type: date
+          type: string
+          example: '2020-07-30T22:53:43.742Z'
           description: Data de criação
         deliveredAt:
-          type: date
-          example: 2
+          type: string
+          example: '2020-07-30T22:53:43.742Z'
           description: Data de entrega
         id:
           type: integer
@@ -204,6 +209,8 @@ tags:
     description: Gestão de Locações
   - name: Administrador
     description: Rotas exclusivas para usuários do tipo administrador
+  - name: Cliente
+    description: Rotas para usuários do tipo cliente
 
 ## PATHS
 paths:
@@ -223,6 +230,7 @@ paths:
     post:
       tags:
         - Autenticação
+        - Cliente
       summary: Gera um token de autenticação para a plataforma encontrada
       description: >
         O resultado desse endpoint deve ser inserido no header de autenticação. Exemplo:
@@ -251,6 +259,7 @@ paths:
     post:
       tags:
         - Autenticação
+        - Cliente
       summary: Realiza o cadastro de no um novo usuário
       requestBody:
         required: true
@@ -273,6 +282,7 @@ paths:
     get:
       tags:
         - Autenticação
+        - Cliente
       summary: Gera um novo token de autenticação atualizado com uma nova data de expiração
       description: "Atenção: essa ação só pode ser utilizada uma vez por token. Caso o token resultante seja perdido será necessário uma nova autenticação."
       security:
@@ -291,6 +301,7 @@ paths:
     post:
       tags:
         - Autenticação
+        - Cliente
       summary: realiza o logout do usuario
       security:
         - client:
@@ -304,6 +315,7 @@ paths:
     get:
       tags:
         - Autenticação
+        - Cliente
       summary: Busca os dados do usuário logado
       security:
         - client:
@@ -316,10 +328,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
   ## USER
-  /user:
+  /users:
     patch:
       tags:
         - Usuários
+        - Cliente
       summary: Atualiza os dados do usuário logado
       requestBody:
         required: true
@@ -337,7 +350,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-  /admin/user:
+  /admin/users:
     get:
       tags:
         - Usuários
@@ -356,7 +369,7 @@ paths:
             type: integer
         - in: query
           name: sortBy
-          description: O nome atributo no qual deseja ordenar a busca
+          description: O nome do atributo no qual deseja ordenar a busca
           schema:
             type: string
         - in: query
@@ -398,7 +411,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-  /admin/user/{userId}:
+  /admin/users/{userId}:
     get:
       tags:
         - Usuários
@@ -462,7 +475,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-  /admin/user/{userId}/promote:
+  /admin/users/{userId}/promote:
     put:
       tags:
         - Usuários
@@ -482,7 +495,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-  /admin/user/{userId}/demote:
+  /admin/users/{userId}/demote:
     put:
       tags:
         - Usuários
@@ -503,10 +516,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
   ## Movies
-  /movie:
+  /movies:
     get:
       tags:
         - Filmes
+        - Cliente
       summary: Busca os usuários cadastrados pelos parametros informados na query
       parameters:
         - in: query
@@ -521,7 +535,7 @@ paths:
             type: integer
         - in: query
           name: sortBy
-          description: O nome atributo no qual deseja ordenar a busca
+          description: O nome do atributo no qual deseja ordenar a busca
           schema:
             type: string
         - in: query
@@ -548,10 +562,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListMovies'
-  /movie/{movieId}:
+  /movies/{movieId}:
     get:
       tags:
         - Filmes
+        - Cliente
       summary: Busca um filme pelo id informado
       parameters:
         - in: path
@@ -567,7 +582,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Movie'
-  /admin/movie:
+  /admin/movies:
     post:
       tags:
         - Filmes
@@ -588,7 +603,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Movie'
-  /admin/movie/{movieId}:
+  /admin/movies/{movieId}:
     patch:
       tags:
         - Filmes
@@ -634,10 +649,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Movie'
   ##  Rents
-  /rent:
+  /rents:
     get:
       tags:
         - Locações
+        - Cliente
       summary: Lista as locações do usuário logado
       description: Busca todas locações do usuário logado pelos paramtros
       security:
@@ -655,7 +671,7 @@ paths:
             type: integer
         - in: query
           name: sortBy
-          description: O nome atributo no qual deseja ordenar a busca
+          description: O nome do atributo no qual deseja ordenar a busca
           schema:
             type: string
         - in: query
@@ -668,6 +684,16 @@ paths:
           description: O texto de busca que corresponde ao filme ou usuário
           schema:
             type: string
+        - in: query
+          name: onlyOpened
+          description: Buscar somente as locações em aberto.
+          schema:
+            type: string
+        - in: query
+          name: onlyClosed
+          description: Buscar somente as locações com data de devolução cadastrada, sobrepõe o atributo onlyOpened
+          schema:
+            type: string
       responses:
           200:
             description: OK
@@ -675,15 +701,67 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/ListRent'
-  /rent/{rentId}:
+  /rents/{rentId}:
     get:
-
-  /rent/movie/{movieId}:
+      tags:
+        - Locações
+        - Cliente
+      summary: Busca os detalhes de uma locação do usuário pelo ID informado
+      parameters:
+        - in: path
+          name: rentId
+          description: Id da locação
+      security:
+        - client:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rent'
+  /rents/movie/{movieId}:
     post:
-    get:
-  /rent/{rentId}/return:
+      tags:
+        - Locações
+        - Cliente
+      summary: Cria as uma nova locação do filme informado
+      security:
+        - client:
+      parameters:
+        - in: path
+          name: movieId
+          description: Id do filme desejado
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rent'
+        400:
+          description: Não há unidades disponíveis
+  /rents/{rentId}/return:
     post:
-  /admin/rent:
+      tags:
+       - Locações
+       - Cliente
+      summary: Retorna uma locação
+      description: Define uma locação como retornada
+      parameters:
+        - in: path
+          name: rentId
+          description: Id do filme desejado
+      security:
+        - client:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rent'
+  /admin/rents:
     get:
       tags:
         - Locações
@@ -705,7 +783,7 @@ paths:
             type: integer
         - in: query
           name: sortBy
-          description: O nome atributo no qual deseja ordenar a busca.
+          description: O nome do atributo no qual deseja ordenar a busca.
           schema:
             type: string
         - in: query
@@ -723,6 +801,21 @@ paths:
           description: Id do usuário, ao enviar esse atributo serão listados somente os registros referentes ao usuário.
           schema:
             type: string
+        - in: query
+          name: userId
+          description: Id do usuário, ao enviar esse atributo serão listados somente os registros referentes ao usuário.
+          schema:
+            type: string
+        - in: query
+          name: onlyOpened
+          description: Buscar somente as locações em aberto.
+          schema:
+            type: string
+        - in: query
+          name: onlyClosed
+          description: Buscar somente as locações com data de devolução cadastrada, sobrepõe o atributo onlyOpened
+          schema:
+            type: string
       responses:
           200:
             description: OK
@@ -730,9 +823,86 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/ListRent'
-  /admin/rent/{rentId}:
-
-  /admin/rent/{rentId}/return:
+  /admin/rents/{rentId}:
+    get:
+      tags:
+        - Locações
+        - Administrador
+      summary: Busca os detalhes de uma locação pelo ID informado
+      parameters:
+        - in: path
+          name: rentId
+          description: Id da locação
+      security:
+        - client:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rent'
+    delete:
+      tags:
+        - Locações
+        - Administrador
+      summary: Deleta locação pelo ID informado
+      parameters:
+        - in: path
+          name: rentId
+          description: Id da locação
+      security:
+        - client:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rent'
+  /admin/rents/{rentId}/return:
+    post:
+      tags:
+       - Locações
+       - Administrador
+      summary: Retorna uma locação
+      description: Define uma locação como retornada
+      parameters:
+        - in: path
+          name: rentId
+          description: Id da locação desejado
+      security:
+        - client:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rent'
+  /admin/rents/movie/{movieId}/user/{userId}:
+    post:
+      tags:
+       - Locações
+       - Administrador
+      summary: Cria uma nova locação 
+      description: Cria uma nova locação do usuário e filme informados
+      parameters:
+        - in: path
+          name: movieId
+          description: Id do filme desejado
+        - in: path
+          name: usereId
+          description: Id do usuário desejado
+      security:
+        - client:
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rent'
     
 
   
