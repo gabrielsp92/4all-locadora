@@ -13,12 +13,12 @@ $ docker-compose up -d
 
 # migrate database
 $ node_modules/.bin/sequelize db:migrate
-# with sequelize-cli
+# or with sequelize-cli
 $ npx sequelize-cli db:migrate
 
 # seed database
 $ node_modules/.bin/sequelize db:seed:all
-# with sequelize-cli
+# or with with sequelize-cli
 $ npx sequelize-cli db:seed:all
 
 # serve with hot reload at localhost:4000
@@ -37,15 +37,15 @@ $ npm run test
 After runing the project in dev mode, you can access the documentation with every route specification at
   - http://localhost:4000/api-docs
 
-If you generated the database from migrate and seed as described above, you can use theese default sample users to authenticate.
+If you seeded the database as described above, you can use theese default sample users to authenticate
   - admin:
     - email: admin@admin.com
     - password: adminadmin
   - client:
-    - email: admin@admin.com
+    - email: client@client.com
     - password: clientclient
 
-The authorization token should be in the header with the following format
+You should provide the authorization token in the request header when accessing a restricted endpoint, it must be in the following format
   - Authorization: Bearer < token >
 
 If you need to change any database configuration params, you can do it at
