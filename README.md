@@ -67,9 +67,9 @@ and postgres default password:
 - [JWT](https://jwt.io/) - Web tokens for authentications
 - [Bcrypt](https://www.npmjs.com/package/bcrypt) - Encrypting passwords
 - [Swagger.io](https://swagger.io/docs/specification/about/) - Api Docs
-- [Mocha](https://mochajs.org) Asynchronous testing
-- [supertest](https://www.npmjs.com/package/supertest) HTTP testing
-- [Chai](https://www.chaijs.com/) Assertion Framework
+- [Mocha](https://mochajs.org)- Asynchronous testing
+- [supertest](https://www.npmjs.com/package/supertest) - HTTP testing
+- [Chai](https://www.chaijs.com/) - Assertion Framework
 - [Docker](https://www.docker.com/) - Container with postgres and pgadmin4
 
 
